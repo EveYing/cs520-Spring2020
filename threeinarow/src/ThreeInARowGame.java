@@ -23,7 +23,7 @@ public class ThreeInARowGame {
     /**
      * The current player taking their turn
      */
-    public String player = "1";
+    public String player = "X";
     public int movesLeft = 9;
 
     /**
@@ -89,378 +89,111 @@ public class ThreeInARowGame {
      *
      * @param block The block to be moved to by the current player
      */
-    protected void move(JButton block) {
-        --movesLeft;
+	protected void move(JButton block) {
+		movesLeft--;
+
+		updateBlock(block);
+		String winner = checkWinner(block);
+
         if (movesLeft % 2 == 1) {
             playerturn.setText("'X': Player 1");
+			player = "X";
         } else {
             playerturn.setText("'O': Player 2");
+			player = "O";
         }
 
-        if (player.equals("1")) {
-            // Check whether player 1 won
-            if (block == blocks[0][0]) {
-                blocksData[0][0].setContents("X");
-                blocksData[0][0].setIsLegalMove(false);
-                updateBlock(0, 0);
-                player = "2";
-                if (movesLeft < 7) {
-                    if ((blocksData[0][0].getContents().equals(blocksData[0][1].getContents()) &&
-                            blocksData[0][1].getContents().equals(blocksData[0][2].getContents())) ||
-                            (blocksData[0][0].getContents().equals(blocksData[1][0].getContents()) &&
-                                    blocksData[1][0].getContents().equals(blocksData[2][0].getContents())) ||
-                            (blocksData[0][0].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[2][2].getContents()))) {
-                        playerturn.setText("Player 1 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[0][1]) {
-                blocksData[0][1].setContents("X");
-                blocksData[0][1].setIsLegalMove(false);
-                updateBlock(0, 1);
-                player = "2";
-                if (movesLeft < 7) {
-                    if ((blocksData[0][1].getContents().equals(blocksData[0][0].getContents()) &&
-                            blocksData[0][0].getContents().equals(blocksData[0][2].getContents())) ||
-                            (blocksData[0][1].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[2][1].getContents()))) {
-                        playerturn.setText("Player 1 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[0][2]) {
-                blocksData[0][2].setContents("X");
-                blocksData[0][2].setIsLegalMove(false);
-                updateBlock(0, 2);
-                player = "2";
-                if (movesLeft < 7) {
-                    if ((blocksData[0][2].getContents().equals(blocksData[0][1].getContents()) &&
-                            blocksData[0][1].getContents().equals(blocksData[0][0].getContents())) ||
-                            (blocksData[0][2].getContents().equals(blocksData[1][2].getContents()) &&
-                                    blocksData[1][2].getContents().equals(blocksData[2][2].getContents())) ||
-                            (blocksData[0][2].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[2][0].getContents()))) {
-                        playerturn.setText("Player 1 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[1][0]) {
-                blocksData[1][0].setContents("X");
-                blocksData[1][0].setIsLegalMove(false);
-                // Enable the space on top of this one
-                blocksData[0][0].setIsLegalMove(true);
-                updateBlock(1, 0);
-                updateBlock(0, 0);
-                player = "2";
-                if (movesLeft < 7) {
-                    if ((blocksData[1][0].getContents().equals(blocksData[1][1].getContents()) &&
-                            blocksData[1][1].getContents().equals(blocksData[1][2].getContents())) ||
-                            (blocksData[1][0].getContents().equals(blocksData[0][0].getContents()) &&
-                                    blocksData[0][0].getContents().equals(blocksData[2][0].getContents()))) {
-                        playerturn.setText("Player 1 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[1][1]) {
-                blocksData[1][1].setContents("X");
-                blocksData[1][1].setIsLegalMove(false);
-                // Enable the space on top of this one
-                blocksData[0][1].setIsLegalMove(true);
-                updateBlock(1, 1);
-                updateBlock(0, 1);
-                player = "2";
-                if (movesLeft < 7) {
-                    if ((blocksData[1][1].getContents().equals(blocksData[1][0].getContents()) &&
-                            blocksData[1][0].getContents().equals(blocksData[1][2].getContents())) ||
-                            (blocksData[1][1].getContents().equals(blocksData[0][1].getContents()) &&
-                                    blocksData[0][1].getContents().equals(blocksData[2][1].getContents())) ||
-                            (blocksData[1][1].getContents().equals(blocksData[0][0].getContents()) &&
-                                    blocksData[0][0].getContents().equals(blocksData[2][2].getContents())) ||
-                            (blocksData[1][1].getContents().equals(blocksData[0][2].getContents()) &&
-                                    blocksData[0][2].getContents().equals(blocksData[2][0].getContents()))) {
-                        playerturn.setText("Player 1 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[1][2]) {
-                blocksData[1][2].setContents("X");
-                blocksData[1][2].setIsLegalMove(false);
-                // Enable the space on top of this one
-                blocksData[0][2].setIsLegalMove(true);
-                updateBlock(1, 2);
-                updateBlock(0, 2);
-                player = "2";
-                if (movesLeft < 7) {
-                    if ((blocksData[1][2].getContents().equals(blocksData[0][2].getContents()) &&
-                            blocksData[0][2].getContents().equals(blocksData[2][2].getContents())) ||
-                            (blocksData[1][2].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[1][0].getContents()))) {
-                        playerturn.setText("Player 1 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[2][0]) {
-                blocksData[2][0].setContents("X");
-                blocksData[2][0].setIsLegalMove(false);
-                // Enable the space on top of this one
-                blocksData[1][0].setIsLegalMove(true);
-                updateBlock(2, 0);
-                updateBlock(1, 0);
-                player = "2";
-                if (movesLeft < 7) {
-                    if ((blocksData[2][0].getContents().equals(blocksData[2][1].getContents()) &&
-                            blocksData[2][1].getContents().equals(blocksData[2][2].getContents())) ||
-                            (blocksData[2][0].getContents().equals(blocksData[1][0].getContents()) &&
-                                    blocksData[1][0].getContents().equals(blocksData[0][0].getContents())) ||
-                            (blocksData[2][0].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[0][2].getContents()))) {
-                        playerturn.setText("Player 1 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[2][1]) {
-                blocksData[2][1].setContents("X");
-                blocksData[2][1].setIsLegalMove(false);
-                // Enabled the space on top of this one
-                blocksData[1][1].setIsLegalMove(true);
-                updateBlock(2, 1);
-                updateBlock(1, 1);
-                player = "2";
-                if (movesLeft < 7) {
-                    if ((blocksData[2][1].getContents().equals(blocksData[2][0].getContents()) &&
-                            blocksData[2][0].getContents().equals(blocksData[2][2].getContents())) ||
-                            (blocksData[2][1].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[0][1].getContents()))) {
-                        playerturn.setText("Player 1 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[2][2]) {
-                blocksData[2][2].setContents("X");
-                blocksData[2][2].setIsLegalMove(false);
-                // Enable the space on top of this one
-                blocksData[1][2].setIsLegalMove(true);
-                updateBlock(2, 2);
-                updateBlock(1, 2);
-                player = "2";
-                if (movesLeft < 7) {
-                    if ((blocksData[2][2].getContents().equals(blocksData[2][1].getContents()) &&
-                            blocksData[2][1].getContents().equals(blocksData[2][0].getContents())) ||
-                            (blocksData[2][2].getContents().equals(blocksData[1][2].getContents()) &&
-                                    blocksData[1][2].getContents().equals(blocksData[0][2].getContents())) ||
-                            (blocksData[2][2].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[0][0].getContents()))) {
-                        playerturn.setText("Player 1 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            }
-        } else {
-            // Check whether player 2 won
-            if (block == blocks[0][0]) {
-                blocksData[0][0].setContents("O");
-                blocksData[0][0].setIsLegalMove(false);
-                updateBlock(0, 0);
-                player = "1";
-                if (movesLeft < 7) {
-                    if ((blocksData[0][0].getContents().equals(blocksData[0][1].getContents()) &&
-                            blocksData[0][1].getContents().equals(blocksData[0][2].getContents())) ||
-                            (blocksData[0][0].getContents().equals(blocksData[1][0].getContents()) &&
-                                    blocksData[1][0].getContents().equals(blocksData[2][0].getContents())) ||
-                            (blocksData[0][0].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[2][2].getContents()))) {
-                        playerturn.setText("Player 2 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[0][1]) {
-                blocksData[0][1].setContents("O");
-                blocksData[0][1].setIsLegalMove(false);
-                updateBlock(0, 1);
-                player = "1";
-                if (movesLeft < 7) {
-                    if ((blocksData[0][1].getContents().equals(blocksData[0][0].getContents()) &&
-                            blocksData[0][0].getContents().equals(blocksData[0][2].getContents())) ||
-                            (blocksData[0][1].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[2][1].getContents()))) {
-                        playerturn.setText("Player 2 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[0][2]) {
-                blocksData[0][2].setContents("O");
-                blocksData[0][2].setIsLegalMove(false);
-                updateBlock(0, 2);
-                player = "1";
-                if (movesLeft < 7) {
-                    if ((blocksData[0][2].getContents().equals(blocksData[0][1].getContents()) &&
-                            blocksData[0][1].getContents().equals(blocksData[0][0].getContents())) ||
-                            (blocksData[0][2].getContents().equals(blocksData[1][2].getContents()) &&
-                                    blocksData[1][2].getContents().equals(blocksData[2][2].getContents())) ||
-                            (blocksData[0][2].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[2][0].getContents()))) {
-                        playerturn.setText("Player 2 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[1][0]) {
-                blocksData[1][0].setContents("O");
-                blocksData[1][0].setIsLegalMove(false);
-                // Enable the space on top of this one
-                blocksData[0][0].setIsLegalMove(true);
-                updateBlock(1, 0);
-                updateBlock(0, 0);
-                player = "1";
-                if (movesLeft < 7) {
-                    if ((blocksData[1][0].getContents().equals(blocksData[1][1].getContents()) &&
-                            blocksData[1][1].getContents().equals(blocksData[1][2].getContents())) ||
-                            (blocksData[1][0].getContents().equals(blocksData[0][0].getContents()) &&
-                                    blocksData[0][0].getContents().equals(blocksData[2][0].getContents()))) {
-                        playerturn.setText("Player 2 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[1][1]) {
-                blocksData[1][1].setContents("O");
-                blocksData[1][1].setIsLegalMove(false);
-                // Enable the space on top of this one
-                blocksData[0][1].setIsLegalMove(true);
-                updateBlock(1, 1);
-                updateBlock(0, 1);
-                player = "1";
-                if (movesLeft < 7) {
-                    if ((blocksData[1][1].getContents().equals(blocksData[1][0].getContents()) &&
-                            blocksData[1][0].getContents().equals(blocksData[1][2].getContents())) ||
-                            (blocksData[1][1].getContents().equals(blocksData[0][1].getContents()) &&
-                                    blocksData[0][1].getContents().equals(blocksData[2][1].getContents())) ||
-                            (blocksData[1][1].getContents().equals(blocksData[0][0].getContents()) &&
-                                    blocksData[0][0].getContents().equals(blocksData[2][2].getContents())) ||
-                            (blocksData[1][1].getContents().equals(blocksData[0][2].getContents()) &&
-                                    blocksData[0][2].getContents().equals(blocksData[2][0].getContents()))) {
-                        playerturn.setText("Player 2 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[1][2]) {
-                blocksData[1][2].setContents("O");
-                blocksData[1][2].setIsLegalMove(false);
-                // Enable the space on top of this one
-                blocksData[0][2].setIsLegalMove(true);
-                updateBlock(1, 2);
-                updateBlock(0, 2);
-                player = "1";
-                if (movesLeft < 7) {
-                    if ((blocksData[1][2].getContents().equals(blocksData[0][2].getContents()) &&
-                            blocksData[0][2].getContents().equals(blocksData[2][2].getContents())) ||
-                            (blocksData[1][2].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[1][0].getContents()))) {
-                        playerturn.setText("Player 2 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[2][0]) {
-                blocksData[2][0].setContents("O");
-                blocksData[2][0].setIsLegalMove(false);
-                // Enable the space on top of this one
-                blocksData[1][0].setIsLegalMove(true);
-                updateBlock(2, 0);
-                updateBlock(1, 0);
-                player = "1";
-                if (movesLeft < 7) {
-                    if ((blocksData[2][0].getContents().equals(blocksData[2][1].getContents()) &&
-                            blocksData[2][1].getContents().equals(blocksData[2][2].getContents())) ||
-                            (blocksData[2][0].getContents().equals(blocksData[1][0].getContents()) &&
-                                    blocksData[1][0].getContents().equals(blocksData[0][0].getContents())) ||
-                            (blocksData[2][0].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[0][2].getContents()))) {
-                        playerturn.setText("Player 2 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[2][1]) {
-                blocksData[2][1].setContents("O");
-                blocksData[2][1].setIsLegalMove(false);
-                // Enable the space on top of this one
-                blocksData[1][1].setIsLegalMove(true);
-                updateBlock(2, 1);
-                updateBlock(1, 1);
-                player = "1";
-                if (movesLeft < 7) {
-                    if ((blocksData[2][1].getContents().equals(blocksData[2][0].getContents()) &&
-                            blocksData[2][0].getContents().equals(blocksData[2][2].getContents())) ||
-                            (blocksData[2][1].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[0][1].getContents()))) {
-                        playerturn.setText("Player 2 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            } else if (block == blocks[2][2]) {
-                blocksData[2][2].setContents("O");
-                blocksData[2][2].setIsLegalMove(false);
-                // Enable the space on top of this one
-                blocksData[1][2].setIsLegalMove(true);
-                updateBlock(2, 2);
-                updateBlock(1, 2);
-                player = "1";
-                if (movesLeft < 7) {
-                    if ((blocksData[2][2].getContents().equals(blocksData[2][1].getContents()) &&
-                            blocksData[2][1].getContents().equals(blocksData[2][0].getContents())) ||
-                            (blocksData[2][2].getContents().equals(blocksData[1][2].getContents()) &&
-                                    blocksData[1][2].getContents().equals(blocksData[0][2].getContents())) ||
-                            (blocksData[2][2].getContents().equals(blocksData[1][1].getContents()) &&
-                                    blocksData[1][1].getContents().equals(blocksData[0][0].getContents()))) {
-                        playerturn.setText("Player 2 wins!");
-                        endGame();
-                    } else if (movesLeft == 0) {
-                        playerturn.setText(GAME_END_NOWINNER);
-                    }
-                }
-            }
+		if (winner.equals("X")) {
+			playerturn.setText("Player 1 wins!");
+        } else if (winner.equals("O")) {
+            playerturn.setText("Player 2 wins!");
+        } else if (movesLeft == 0) {
+            playerturn.setText(GAME_END_NOWINNER);
         }
-    }
+	}
+
+	protected String checkWinner(JButton block){
+		// check if rows match
+		for (int i = 0; i < blocks.length; i++) {
+			boolean ifWin = true;
+			for (int j = 1; j < blocks[i].length; j++) {
+				if (!blocksData[i][j].getContents().equals(blocksData[i][j-1].getContents())) {
+					ifWin = false;
+					break;
+				}
+			}
+			if (ifWin) {
+				return blocksData[i][0].getContents();
+			}
+		}
+		// check if column match
+		for (int j = 0; j < blocks[0].length; j++) {
+			boolean ifWin = true;
+			for (int i = 1; i < blocks.length; i++) {
+				if (!blocksData[i][j].getContents().equals(blocksData[i-1][j].getContents())) {
+					ifWin = false;
+					break;
+				}
+			}
+			if (ifWin) {
+				return blocksData[0][j].getContents();
+			}
+		}
+		// check if diagnol match
+        boolean ifWin = true;
+        for (int i = 1; i < blocks.length; i++) {
+			if (!blocksData[i][i].getContents().equals(blocksData[i-1][i-1].getContents())) {
+				ifWin = false;
+				break;
+			}
+		}
+        if (ifWin) {
+            return blocksData[0][0].getContents();
+        }
+        for (int i = 1; i < blocks.length; i++) {
+			if (!blocksData[i][blocks.length-i-1].getContents().equals(blocksData[i-1][blocks.length-i].getContents())) {
+				return "";
+			}
+		}
+        return blocksData[blocks.length-1][0].getContents();
+	}
 
     /**
-     * Updates the block at the given row and column
+     * Find the block Position and Updates the block at the given row and column
      * after one of the player's moves.
      *
      * @param row    The row that contains the block
      * @param column The column that contains the block
      */
+    protected void updateBlock(JButton block) {
+		int row = -1;
+		int column = -1;
+		for (int i = 0; i < blocks.length; i++) {
+			for (int j = 0; j < blocks[i].length; j++) {
+				if (block == blocks[i][j]){
+					row = i;
+					column = j;
+				}
+			}
+		}
+        blocksData[row][column].setContents(player);
+        blocks[row][column].setText(blocksData[row][column].getContents());
+        blocks[row][column].setEnabled(false);
+        enableIfEmpty(row-1, column);
+        enableIfEmpty(row+1, column);
+        enableIfEmpty(row, column-1);
+        enableIfEmpty(row, column+1);        
+    }
+    
+    private void enableIfEmpty(int row, int column) {
+        if (row < 0 || column < 0 || row >= blocks.length || column >= blocks[0].length)
+            return;
+        if (blocksData[row][column].getContents().length() == 0) {
+            blocksData[row][column].setIsLegalMove(true);
+            blocks[row][column].setEnabled(true);
+        }
+    }
+    
     protected void updateBlock(int row, int column) {
         blocks[row][column].setText(blocksData[row][column].getContents());
         blocks[row][column].setEnabled(blocksData[row][column].getIsLegalMove());
@@ -483,13 +216,14 @@ public class ThreeInARowGame {
     public void resetGame() {
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 3; column++) {
+                blocks[row][column].setEnabled(row == 2);
                 blocksData[row][column].reset();
                 // Enable the bottom row
                 blocksData[row][column].setIsLegalMove(row == 2);
-                updateBlock(row, column);
+                blocks[row][column].setText("");
             }
         }
-        player = "1";
+        player = "X";
         movesLeft = 9;
         playerturn.setText("Player 1 to play 'X'");
     }
