@@ -26,6 +26,9 @@ public class ThreeInARowView {
      * Creates a new game initializing the GUI.
      */
     public ThreeInARowView(ThreeInARowGame controller) {
+        if (controller == null) {
+            throw new IllegalArgumentException("The controller must be non-null.");
+        }
         this.controller = controller;
         this.N = controller.N;
         blocks = new JButton[N][N];
@@ -85,12 +88,20 @@ public class ThreeInARowView {
         playerturn.setText(text);
     }
 
+    public String getTopText() {
+        return playerturn.getText();
+    }
+
     public void enableButton(int i, int j, boolean enabled) {
         blocks[i][j].setEnabled(enabled);
     }
 
     public void setButtonText(int i, int j, String text) {
         blocks[i][j].setText(text);
+    }
+
+    public String getButtonText(int i, int j) {
+        return blocks[i][j].getText();
     }
 
     public void setVisible(boolean visible) {

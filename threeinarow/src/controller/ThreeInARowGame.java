@@ -33,6 +33,14 @@ public class ThreeInARowGame {
      */
     public static void main(String[] args) {
         ThreeInARowGame game = new ThreeInARowGame();
+        game.start();
+    }
+
+    public void start() {
+        view.setVisible(true);
+    }
+    public ThreeInARowView getView() {
+        return view;
     }
 
     /**
@@ -51,7 +59,6 @@ public class ThreeInARowGame {
                 view.enableButton(row, column, blocksData[row][column].getIsLegalMove());
             }
         }
-        view.setVisible(true);
     }
 
     /**
