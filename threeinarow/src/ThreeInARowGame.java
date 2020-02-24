@@ -2,8 +2,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.JPanel;
-import java.awt.*;
-import java.awt.event.*;
+
 
 /**
  * Java implementation of the 3 in a row game, using the Swing framework.
@@ -16,55 +15,27 @@ public class ThreeInARowGame {
     public static final String GAME_END_NOWINNER = "Game ends in a draw";
 
     public final int N = 3; /* Set Board size */
-    public JFrame gui = new JFrame("Three in a Row");
     public ThreeInARowBlock[][] blocksData = new ThreeInARowBlock[N][N];
-    public JButton[][] blocks = new JButton[N][N];
-    public JButton reset = new JButton("Reset");
-    public JTextArea playerturn = new JTextArea();
+
     /**
      * The current player taking their turn
      */
     public String player = "X";
     public int movesLeft = N * N;
+    private ThreeInARowView view;
 
     /**
      * Starts a new game in the GUI.
      */
     public static void main(String[] args) {
         ThreeInARowGame game = new ThreeInARowGame();
-        game.gui.setVisible(true);
     }
 
     /**
      * Creates a new game initializing the GUI.
      */
     public ThreeInARowGame() {
-        gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gui.setSize(new Dimension(500, 350));
-        gui.setResizable(true);
-
-        JPanel gamePanel = new JPanel(new FlowLayout());
-        JPanel game = new JPanel(new GridLayout(N, N));
-        gamePanel.add(game, BorderLayout.CENTER);
-
-        JPanel options = new JPanel(new FlowLayout());
-        options.add(reset);
-        JPanel messages = new JPanel(new FlowLayout());
-        messages.setBackground(Color.white);
-
-        gui.add(gamePanel, BorderLayout.NORTH);
-        gui.add(options, BorderLayout.CENTER);
-        gui.add(messages, BorderLayout.SOUTH);
-
-        messages.add(playerturn);
-        playerturn.setText("Player 1 to play 'X'");
-
-        reset.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                resetGame();
-            }
-        });
-
+        view = new ThreeInARowView(this);
         // Initialize a JButton for each cell of the 3x3 game board.
         for (int row = 0; row < N; row++) {
             for (int column = 0; column < N; column++) {
@@ -72,17 +43,11 @@ public class ThreeInARowGame {
                 // The last row contains the legal moves
                 blocksData[row][column].setContents("");
                 blocksData[row][column].setIsLegalMove(row == N-1);
-                blocks[row][column] = new JButton();
-                blocks[row][column].setPreferredSize(new Dimension(75, 75));
-                updateBlock(row, column);
-                game.add(blocks[row][column]);
-                blocks[row][column].addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        move((JButton) e.getSource());
-                    }
-                });
+                view.setButtonText(row, column, blocksData[row][column].getContents());
+                view.enableButton(row, column, blocksData[row][column].getIsLegalMove());
             }
         }
+        view.setVisible(true);
     }
 
     /**
@@ -90,30 +55,31 @@ public class ThreeInARowGame {
      *
      * @param block The block to be moved to by the current player
      */
-	protected void move(JButton block) {
+	protected void move(int row, int col) {
 		movesLeft--;
-
-		updateBlock(block);
-		String winner = checkWinner(block);
+		updateBlock(row, col);
+		String winner = checkWinner();
 
         if (movesLeft % 2 == 1) {
-            playerturn.setText("'X': Player 1");
+            view.setTopText("'X': Player 1");
 			player = "X";
         } else {
-            playerturn.setText("'O': Player 2");
+            view.setTopText("'O': Player 2");
 			player = "O";
         }
 
 		if (winner.equals("X")) {
-			playerturn.setText("Player 1 wins!");
+			view.setTopText("Player 1 wins!");
+            endGame();
         } else if (winner.equals("O")) {
-            playerturn.setText("Player 2 wins!");
+            view.setTopText("Player 2 wins!");
+            endGame();
         } else if (movesLeft == 0) {
-            playerturn.setText(GAME_END_NOWINNER);
+            view.setTopText(GAME_END_NOWINNER);
         }
 	}
 
-	protected String checkWinner(JButton block){
+	protected String checkWinner(){
 		// check if rows match
 		for (int i = 0; i < N; i++) {
 			boolean ifWin = true;
@@ -166,20 +132,10 @@ public class ThreeInARowGame {
      * @param row    The row that contains the block
      * @param column The column that contains the block
      */
-    protected void updateBlock(JButton block) {
-		int row = -1;
-		int column = -1;
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (block == blocks[i][j]){
-					row = i;
-					column = j;
-				}
-			}
-		}
+    protected void updateBlock(int row, int column) {
         blocksData[row][column].setContents(player);
-        blocks[row][column].setText(blocksData[row][column].getContents());
-        blocks[row][column].setEnabled(false);
+        view.setButtonText(row, column, blocksData[row][column].getContents());
+        view.enableButton(row, column, false);
         enableIfEmpty(row-1, column);
         enableIfEmpty(row+1, column);
         enableIfEmpty(row, column-1);
@@ -191,13 +147,8 @@ public class ThreeInARowGame {
             return;
         if (blocksData[row][column].getContents().length() == 0) {
             blocksData[row][column].setIsLegalMove(true);
-            blocks[row][column].setEnabled(true);
+            view.enableButton(row, column, true);
         }
-    }
-    
-    protected void updateBlock(int row, int column) {
-        blocks[row][column].setText(blocksData[row][column].getContents());
-        blocks[row][column].setEnabled(blocksData[row][column].getIsLegalMove());
     }
 
     /**
@@ -206,7 +157,7 @@ public class ThreeInARowGame {
     public void endGame() {
         for (int row = 0; row < N; row++) {
             for (int column = 0; column < N; column++) {
-                blocks[row][column].setEnabled(false);
+                view.enableButton(row, column, false);
             }
         }
     }
@@ -217,15 +168,15 @@ public class ThreeInARowGame {
     public void resetGame() {
         for (int row = 0; row < N; row++) {
             for (int column = 0; column < N; column++) {
-                blocks[row][column].setEnabled(row == N-1);
                 blocksData[row][column].reset();
                 // Enable the bottom row
                 blocksData[row][column].setIsLegalMove(row == N-1);
-                blocks[row][column].setText("");
+                view.setButtonText(row, column, "");
+                view.enableButton(row, column, row == N-1);
             }
         }
         player = "X";
         movesLeft = N * N;
-        playerturn.setText("Player 1 to play 'X'");
+        view.setTopText("Player 1 to play 'X'");
     }
 }
