@@ -1,3 +1,7 @@
+package model;
+
+import controller.ThreeInARowGame;
+
 /**
  * The ThreeInARowBlock class represents a given block in the game.
  */

@@ -1,3 +1,7 @@
+package controller;
+
+import view.ThreeInARowView;
+import model.ThreeInARowBlock;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
@@ -55,7 +59,7 @@ public class ThreeInARowGame {
      *
      * @param block The block to be moved to by the current player
      */
-	protected void move(int row, int col) {
+	public void move(int row, int col) {
 		movesLeft--;
 		updateBlock(row, col);
 		String winner = checkWinner();

@@ -1,3 +1,6 @@
+package view;
+
+import controller.ThreeInARowGame;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
